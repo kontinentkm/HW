@@ -1,11 +1,10 @@
+const isWordInEveryArrayString = (array, word) => {
+	if (array.length === 0) {
+		return false;
+	} else
+	return array.every(element => element.includes(word));
 
+};
 
-function outside(x) {
-	function inside(y) {
-	  return x + y;
-	}
-	return inside;
- }
- 
-console.log(outside(3)(5));
+console.log(isWordInEveryArrayString([], 'apple'));
 
