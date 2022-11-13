@@ -45,6 +45,7 @@ fetch('https://dummyjson.com/products')
 				carouselItem.className = 'carousel-item active';
 			}
 			cardImage.src = cards[i].images[j];
+			cardImage.setAttribute('style', 'min-height: 150px')
 			carouselButtons.innerHTML = `<button class="carousel-control-prev" type="button" data-bs-target="#carouselControls${i}${j}"  data-bs-slide="prev"> <span class="carousel-control-prev-icon" aria-hidden="true"></span> <span class="visually-hidden">Предыдущий</span></button><button class="carousel-control-next" type="button" data-bs-target="#carouselControls${i}${j}"  data-bs-slide="next"><span class="carousel-control-next-icon" aria-hidden="true"></span><span class="visually-hidden">Следующий</span></button>`
 
 			carouselInner.appendChild(carouselItem);
