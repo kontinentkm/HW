@@ -1,3 +1,37 @@
 .title {
   margin: 50px 0 50px;
 }
+
+.darkBackground {
+	background-color:black;
+	opacity: 0.5;
+	z-index: 1;
+	position: absolute;
+	height: 100vh;
+	width: 100%;
+	display: none;
+}
+
+.yourOrderBlock {
+	height: 100vh;
+	background-color: white;
+	position: absolute;
+	z-index: 2;
+}
+
+.yourOrderHeader {
+	display: flex;
+	justify-content: space-between;
+}
+
+.yourOrderCardsListNoItems {
+	text-align: center;
+}
+
+.yourOrderTotalPrice {
+	text-align: end;
+}
+
+.yourCardButton {
+	margin-right: 10px;
+}

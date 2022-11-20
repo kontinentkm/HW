@@ -19,6 +19,43 @@
 </head>
 
 <body>
+
+	<nav class="navbar navbar-expand bg-light">
+		<div class="container-fluid">
+			<a class="navbar-brand" href="#">Our Shop</a>
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+				aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+				<button class="yourCardButton btn btn-success" type="submit"></button>
+				<form class="d-flex" role="search">
+					<input class="searchInput form-control me-2" type="search" placeholder="Search" aria-label="Search"
+						id="searchInput">
+					<button class="searchButton btn btn-outline-success" type="submit">Search</button>
+				</form>
+			</div>
+		</div>
+	</nav>
+
+	<div class="darkBackground"></div>
+
+	<div class="yourOrderBlock col-8 p-3 pt-3" style="display: none;">
+		<div class="yourOrder">
+			<div class="yourOrderHeader">
+				<h2 class="yourOrderTitle">Your order</h2>
+				<button type="button" class="closeYourOrder btn-close" aria-label="Close"></button>
+			</div>
+			<p class="yourOrderCardsListNoItems">You don't have any items in order.</p>
+			<div class="yourOrderCardsList list-group"></div>
+			<div class="yourOrderTotalPrice">Total: 00.0$</div>
+			<button type="button" class="yourOrderButton btn btn-primary w-100 disabled">Order</button>
+		</div>
+
+	</div>
+
+
+
 	<div class="container">
 		<h1 class="title">Our Products</h1>
 
