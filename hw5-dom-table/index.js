@@ -127,13 +127,10 @@ function addCardToYourOrder() {
 	cards.forEach(card => {
 		const cardButton = card.querySelector('button');
 		cardButton.addEventListener('click', (event) => {
-
 			const cardPrice = card.querySelector('.price');
 			addPriceToYourCard(+cardPrice.textContent.slice(7).slice(0, -1));
-			
 			const addRemoveButton = createElement('button', ['removeButton', 'btn', 'btn-danger', 'm-1'], null, 'Remove from order');
 			const addPlusButton = createElement('button', ['plusButton','btn', 'btn-secondary', 'm-1'], null, '+');
-			
 			const priceButtonAttributes = [
 				{
 				prop: 'style',
