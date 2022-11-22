@@ -2,19 +2,14 @@ let products = [];
 let filteredProducts = products;
 const wrapper = document.querySelector('.wrapper');
 wrapper.classList.add('row-cols-1', 'row-cols-md-4', 'g-3');
-
 let yourOrderTotalPrice = document.querySelector('.yourOrderTotalPrice');
 let yourOrdercalcAtButton = 0;
 yourOrderTotalPrice.textContent = `Total: ${yourOrdercalcAtButton}.0$`;
-
 let yourCardButton = document.querySelector('.yourCardButton');
 yourCardButton.textContent = `You card - ${yourOrdercalcAtButton}.0$`;
-
-
 const yourOrderBlock = document.querySelector('.yourOrderBlock');
 const yourOrderCardsListNoItems = document.querySelector('.yourOrderCardsListNoItems');
-
-
+let index = '';
 
 
 
@@ -27,7 +22,6 @@ fetch('https://dummyjson.com/products')
 	products = data.products;
 	addProductsToPage(products);
 	search();
-	addCardToYourOrder();
 	yourOrderBlockShowHide();
 	
 
@@ -56,54 +50,6 @@ function yourOrderBlockShowHide() {
 	});
 }
 
-function addPriceToYourCard(cardPrice) {
-	yourOrdercalcAtButton = yourOrdercalcAtButton + cardPrice;
-	yourOrderTotalPrice.textContent = `Total: ${yourOrdercalcAtButton}.0$`
-	yourCardButton.textContent = `You card - ${yourOrdercalcAtButton}.0$`
-	return;
-}
-
-function removePriceFromYourCard(cardPrice) {
-	yourOrdercalcAtButton = yourOrdercalcAtButton - cardPrice;
-	yourOrderTotalPrice.textContent = `Total: ${yourOrdercalcAtButton}.0$`
-	yourCardButton.textContent = `You card - ${yourOrdercalcAtButton}.0$`
-	return;
-}
-
-
-function yourCardOperations() {
-	const cards = document.querySelectorAll('.list-group-item');
-	
-	cards.forEach(card => {
-		const cardPrice = card.querySelector('.yourCardPriceButton');
-		let currentCardPrice = +card.querySelector('.yourCardPriceButton').textContent;
-
-		const plusButton = card.querySelector('.plusButton');
-		plusButton.addEventListener('click', (event) => {
-			currentCardPrice = currentCardPrice + +card.querySelector('.yourCardPriceButton').textContent;
-			cardPrice.textContent = currentCardPrice;
-			addPriceToYourCard(currentCardPrice);
-		})
-		
-
-		const minusButton = card.querySelector('.minusButton');
-		minusButton.addEventListener('click', (event) => {
-			currentCardPrice = currentCardPrice - +card.querySelector('.yourCardPriceButton').textContent;
-			cardPrice.textContent = currentCardPrice;
-			removePriceFromYourCard(currentCardPrice)
-		})
-		
-		const removeButton = card.querySelector('.removeButton');
-		removeButton.addEventListener('click', (event) => {
-			card.remove();
-			removePriceFromYourCard(+card.querySelector('.yourCardPriceButton').textContent);
-			emptyCard();
-			
-		})
-	})
-	return
-}
-
 function emptyCard() {
 	const cards = document.querySelectorAll('.list-group-item');
 	const yourOrderButton = document.querySelector('.yourOrderButton');
@@ -119,58 +65,12 @@ function emptyCard() {
 	}
 }
 
-function addCardToYourOrder() {
-	const cards = document.querySelectorAll('.card');
-	const yourOrderCardsList = document.querySelector('.yourOrderCardsList');
-
-	
-	cards.forEach(card => {
-		const cardButton = card.querySelector('button');
-		cardButton.addEventListener('click', (event) => {
-			const cardPrice = card.querySelector('.price');
-			addPriceToYourCard(+cardPrice.textContent.slice(7).slice(0, -1));
-			const addRemoveButton = createElement('button', ['removeButton', 'btn', 'btn-danger', 'm-1'], null, 'Remove from order');
-			const addPlusButton = createElement('button', ['plusButton','btn', 'btn-secondary', 'm-1'], null, '+');
-			const priceButtonAttributes = [
-				{
-				prop: 'style',
-				value: 'border-radius: 19px;',
-			  	},
-		 	];
-			const addPriceButton = createElement('button', ['yourCardPriceButton', 'btn', 'btn-primary', 'm-1'], priceButtonAttributes, +cardPrice.textContent.slice(7).slice(0, -1));
-			const addMinusButton = createElement('button', ['minusButton', 'btn', 'btn-secondary', 'm-1'], null, '-');
-			const addButtonsDiv = createElement('div', ['d-flex', 'align-items-center'], null, null,[addMinusButton, addPriceButton, addPlusButton, addRemoveButton], 'append' );
-			const addTitle = createElement('p', ['m-2'], null, card.querySelector('h5').innerHTML);
-			const imageAttributes = [
-				{
-				prop: 'src',
-				value: card.querySelector('img').getAttribute('src'),
-				},
-				{
-				prop: 'style',
-				value: 'height: 50px; width: 50px',
-			  	},
-		 	];
-			const addImage = createElement('img', ['img'], imageAttributes);
-			const addImageTitleDiv = createElement('div', ['d-flex', 'align-items-center'], null, null,[addImage, addTitle], 'append' );
-			const addCard = createElement('li', ['list-group-item', 'd-flex', 'align-items-center', 'justify-content-between'], null, null, [addImageTitleDiv, addButtonsDiv], 'append');
-			yourOrderCardsList.appendChild(addCard);
-			yourCardOperations();
-			emptyCard();
-
-		});
-		
-	})
-
-}
-
 function search() {
 	const formElement = document.querySelector('form');
 	const searchInput = document.querySelector('#searchInput');
 	formElement.addEventListener('submit', (event) => {
 		event.preventDefault();
 		searchFunction(searchInput.value);
-		addCardToYourOrder();
 	});
 }
 
@@ -181,6 +81,119 @@ function searchFunction(searchText) {
 	})
 	wrapper.innerHTML = "";
 	addProductsToPage(filteredProducts);
+}
+
+function allPricesCalc() {
+	yourOrdercalcAtButton = 0;
+	const allPrices = document.querySelectorAll('.cardPrice');
+	const allCounts = document.querySelectorAll('.cardCount');
+	for (let i = 0; i < allPrices.length; i++) {
+		yourOrdercalcAtButton = yourOrdercalcAtButton + allPrices[i].textContent * allCounts[i].textContent
+	}
+	yourOrderTotalPrice.textContent = `Total: ${yourOrdercalcAtButton}.0$`
+	yourCardButton.textContent = `You card - ${yourOrdercalcAtButton}.0$`
+}
+
+function cardRemove(card) {
+	const yourCardListGroup = document.querySelectorAll('.list-group-item');
+	const newArray = Array.from(yourCardListGroup);
+	let trueFalse = newArray.some((item, i) => {
+		index = i
+		return item.innerText.includes(card.title)
+	});
+	if (trueFalse) {
+		yourCardListGroup[index].remove();
+		allPricesCalc();
+		emptyCard();
+	} 
+}
+
+function minusButton(card) {
+	const yourCardListGroup = document.querySelectorAll('.list-group-item');
+	const newArray = Array.from(yourCardListGroup);
+	let trueFalse = newArray.some((item, i) => {
+		index = i
+		return item.innerText.includes(card.title)
+	});
+	if (trueFalse) {
+		const count = yourCardListGroup[index].querySelector('.cardCount');
+		count.innerText = +count.innerText - 1;
+		allPricesCalc();
+		if (+count.innerText === 0) {
+			cardRemove(card);
+		}
+	} 
+}
+
+function addCardToYourOrder(card) {
+	const yourCardListGroup = document.querySelectorAll('.list-group-item');
+	const newArray = Array.from(yourCardListGroup);
+
+	let trueFalse = newArray.some((item, i) => {
+		index = i
+		return item.innerText.includes(card.title)
+	});
+
+	if (trueFalse) {
+		const count = yourCardListGroup[index].querySelector('.cardCount');
+		count.innerText = +count.innerText + 1;
+		allPricesCalc();
+	} else creatYourOrderCard(card);	
+
+}
+
+function creatYourOrderCard(card) {
+	const yourOrderCardsList = document.querySelector('.yourOrderCardsList');
+	const addRemoveButton = createElement('button', ['removeButton', 'btn', 'btn-danger', 'm-1'], null, 'Remove from order');
+	addRemoveButton.addEventListener('click', (event) => {
+		cardRemove(card);
+	});
+	const addPlusButton = createElement('button', ['plusButton','btn', 'btn-secondary', 'm-1'], null, '+');
+	addPlusButton.addEventListener('click', (event) => {
+		addCardToYourOrder(card);
+	});
+	const cardCount = createElement('div', ['cardCount'], null, 1);
+	const x = createElement('div', ['m-1'], null, 'x');
+	const cardPriceAttributes = [
+		{
+		prop: 'style',
+		value: 'border-radius: 19px;',
+		},
+		{
+		prop: 'data-price',
+		value: card.price,
+		},
+	];
+	const cardPrice = createElement('div', ['cardPrice'], cardPriceAttributes, card.price);
+	const priceButtonAttributes = [
+		{
+		prop: 'style',
+		value: 'border-radius: 19px;',
+		},
+	];
+	const addPriceButton = createElement('button', ['yourCardPriceButton', 'btn', 'btn-primary', 'm-1', 'd-flex', 'align-items-center'], priceButtonAttributes, null, [cardCount, x, cardPrice], 'append');
+	const addMinusButton = createElement('button', ['minusButton', 'btn', 'btn-secondary', 'm-1'], null, '-');
+	addMinusButton.addEventListener('click', (event) => {
+		minusButton(card);
+	});
+	const addButtonsDiv = createElement('div', ['d-flex', 'align-items-center'], null, null,[addMinusButton, addPriceButton, addPlusButton, addRemoveButton], 'append' );
+	const addTitle = createElement('p', ['yourCardTitle', 'm-2'], null, card.title);
+	const imageAttributes = [
+		{
+		prop: 'src',
+		value: card.thumbnail,
+		},
+		{
+		prop: 'style',
+		value: 'height: 50px; width: 50px',
+		},
+	];
+	const addImage = createElement('img', ['img'], imageAttributes);
+	const addImageTitleDiv = createElement('div', ['d-flex', 'align-items-center'], null, null,[addImage, addTitle], 'append' );
+	const addCard = createElement('li', ['list-group-item', 'd-flex', 'align-items-center', 'justify-content-between'], null, null, [addImageTitleDiv, addButtonsDiv], 'append');
+	yourOrderCardsList.appendChild(addCard);
+	emptyCard();
+	allPricesCalc();
 }
 
 function addProductsToPage(cards) {
@@ -198,6 +211,9 @@ function addProductsToPage(cards) {
 		const card = createElement('div', ['card', 'h-100'], null, null, [cardImage, cardBody, cardFooter, cardButton], 'append');
 		const itemCol = createElement('div', ['col'], null, null, [card], 'append');
 		wrapper.append(itemCol);
+		cardButton.addEventListener('click', (event) => {
+			addCardToYourOrder(product);
+		});
 	});
 }
 	
