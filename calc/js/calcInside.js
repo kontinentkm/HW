@@ -26,7 +26,8 @@ function digitIncludes(key) {
 		if (+calcScreenBottom.textContent === 0 && !b.toString().includes('.')) {
 			b = '';
 		}
-		if (+calcScreenBottom.textContent === 0 && key === '.') {
+		// тут еще доп проверка на постановку точки сращу после знака
+		if ((+calcScreenBottom.textContent === 0 || action.includes(calcScreenBottom.textContent)) && key === '.') {
 			b = '0';
 		}
 		  b += key;
@@ -103,15 +104,16 @@ function pressEquals(key) {
 			break;
 		case "/":
 			a = (a * 10) / (b * 10) / 100;
-			if (a === Infinity || NaN) {
-				calcScreenBottom.textContent = 'Error';
-				a = '';
-				b = '';
-				sign = '';
-				return;
-			}
-			break;
+		if (a === Infinity || NaN) {
+			calcScreenBottom.textContent = 'Error';
+			a = '';
+			b = '';
+			sign = '';
+			return;
+		}
+		break;
 	}
 	finish = true;
 	calcScreenBottom.textContent = a;
+	console.log(a, b, sign)
 }
