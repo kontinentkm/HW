@@ -1,14 +1,14 @@
 function digitIncludes(key) {
 	if (b ==='' && sign === '') {
-		if (a.toString().includes('.') && key === '.') {
+		if (a.toString().includes(',') && key === ',') {
 			key = '';
 		}
 		// не дает печатать ноль несколько раз, если только не после точки
-		if (+calcScreenBottom.textContent === 0 && !a.toString().includes('.')) {
+		if (+calcScreenBottom.textContent === 0 && !a.toString().includes(',')) {
 			a = '';
 		}
 		// если ничего не нажато и нажать точку, то оставляет ноль перед точкой
-		if (+calcScreenBottom.textContent === 0 && key === '.') {
+		if (+calcScreenBottom.textContent === 0 && key === ',') {
 			a = '0';
 		}
 		a += key;
@@ -20,14 +20,14 @@ function digitIncludes(key) {
 		calcScreenBottom.textContent = b;
 	  }
 	  else {
-		if (b.toString().includes('.') && key === '.') {
+		if (b.toString().includes(',') && key === ',') {
 		key = '';
 		}
-		if (+calcScreenBottom.textContent === 0 && !b.toString().includes('.')) {
+		if (+calcScreenBottom.textContent === 0 && !b.toString().includes(',')) {
 			b = '';
 		}
 		// тут еще доп проверка на постановку точки сращу после знака
-		if ((+calcScreenBottom.textContent === 0 || action.includes(calcScreenBottom.textContent)) && key === '.') {
+		if ((+calcScreenBottom.textContent === 0 || action.includes(calcScreenBottom.textContent)) && key === ',') {
 			b = '0';
 		}
 		  b += key;
@@ -49,26 +49,33 @@ function pressAc() {
 }
 
 function pressPlusMinus(key) {
+	replaceCommaToDot();
 	if (Math.abs(calcScreenBottom.textContent) === Math.abs(b)) {
 		b = b * (-1);
+		replaceDotToComma();
 		calcScreenBottom.textContent = b;
 	} else {
 		a = a * (-1);
+		replaceDotToComma();
 		calcScreenBottom.textContent = a;
 	}
 }
 
 function pressPercent(key) {
+	replaceCommaToDot();
 	if (calcScreenBottom.textContent.toString() === b.toString()) {
 		b = b / 100;
+		replaceDotToComma();
 		calcScreenBottom.textContent = b;
 	} else {
 		a = a / 100;
+		replaceDotToComma();
 		calcScreenBottom.textContent = a;
 	}
 }
 
 function pressBackspace(key) {
+	replaceCommaToDot();
 	if (calcScreenBottom.textContent.toString() === b.toString() || b === 0) {
 		if (b !== '' && b !== 0) {
 			b = b.toString().slice(0, -1);
@@ -76,6 +83,7 @@ function pressBackspace(key) {
 		if (b.length === 0) {
 			b = 0;
 		}
+		replaceDotToComma();
 		calcScreenBottom.textContent = b;
 	}
 	else {
@@ -85,11 +93,13 @@ function pressBackspace(key) {
 		if (a.length === 0) {
 			a = 0;
 		}
+		replaceDotToComma();
 		calcScreenBottom.textContent = a;
 	}
 }
 
 function pressEquals(key) {
+	replaceCommaToDot();
 	if (b ==='') b = a;
 	switch (sign) {
 		case "+":
@@ -114,6 +124,21 @@ function pressEquals(key) {
 		break;
 	}
 	finish = true;
+
+	replaceDotToComma();
 	calcScreenBottom.textContent = a;
-	console.log(a, b, sign)
+}
+
+function replaceCommaToDot() {
+	a = a.replace(',', '.')
+	b = b.replace(',', '.')
+	return
+}
+
+function replaceDotToComma() {
+	a = a + ''
+	b = b + ''
+	a = a.replace('.', ',')
+	b = b.replace('.', ',')
+	return
 }
